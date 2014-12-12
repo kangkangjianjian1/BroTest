@@ -13,6 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import mobi.bluepadge.brotest.db.StaffDataBaseHelper;
 
@@ -98,15 +102,42 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.search_from_edit:
                 String comId = editText.getText().toString();
-                Utility.query(MainActivity.this,comId);
+//                Utility.query(MainActivity.this,comId);
+//                showResult(MainActivity)
+                showResult(comId);
                 break;
             case R.id.search_from_scan:
-                //TODO Create Scan Method
-                Intent intentScan = new Intent(MainActivity.this,Scan.class);
-                startActivity(intentScan);
+                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                integrator.addExtra("SCAN_WIDTH", 640);
+                integrator.addExtra("SCAN_HEIGHT", 480);
+                integrator.addExtra("SCAN_MODE", "QR_CODE_MODE,PRODUCT_MODE");
+                //customize the prompt message before scanning
+                integrator.addExtra("PROMPT_MESSAGE", "Scanner Start!");
+                integrator.initiateScan(IntentIntegrator.PRODUCT_CODE_TYPES);
                 break;
             default:
                 break;
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (result != null) {
+            String contents = result.getContents();
+            if (contents != null) {
+                Toast.makeText(MainActivity.this, contents, Toast.LENGTH_LONG).show();
+                showResult(contents);
+            } else {
+                Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void showResult(String comId) {
+        Utility.query(MainActivity.this,comId);
+        //跳转到展示页面
+        //TODO
+    }
+
 }

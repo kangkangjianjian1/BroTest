@@ -4,5 +4,7 @@
     <string name="app_name">BroTest</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="result_succeeded">扫码成功</string>
+    <string name="result_failed">扫码失败</string>
 
 </resources>
