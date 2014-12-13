@@ -36,6 +36,7 @@ public class Utility {
 
     public static void writeXlmToDb(Context context,String fileName) {
         if (!isWriteDb(context)) {
+            Log.d("Utility.class", "数据库已经存在,不需要重新读取文件写数据库");
             return;
         }
         AssetManager am = context.getAssets();
@@ -53,15 +54,35 @@ public class Utility {
             //从第一行开始跳过标题栏
             ContentValues contentValues = new ContentValues();
             for (int i = 1; i < row; i++) {
-                Cell cellName = sheet.getCell(0, i);//第一列
-                Cell cellEnglish = sheet.getCell(1, i);
-                Cell cellChinese = sheet.getCell(2, i);
-                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_NAME,
-                        cellName.getContents());
-                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_ENGILISH,
-                        cellEnglish.getContents());
-                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_CHINESE,
-                        cellChinese.getContents());
+                Cell cellSourceName = sheet.getCell(0, i);//第一列
+                Cell cellSpecification = sheet.getCell(1, i);
+                Cell cellDate = sheet.getCell(2, i);
+                Cell cellComSerisesNum = sheet.getCell(3, i);
+                Cell cellMonSerisedNum = sheet.getCell(4, i);
+                Cell cellStorePosition = sheet.getCell(5, i);
+                Cell cellDepartmentofUser = sheet.getCell(6, i);
+                Cell cellUser = sheet.getCell(7, i);
+                Cell cellAddedNote = sheet.getCell(8, i);
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_SOURCENAME,
+                        cellSourceName.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_SPECIFICATION,
+                        cellSpecification.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_DATE,
+                        cellDate.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_COMSERIESNUM,
+                        cellComSerisesNum.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_MONSERIESNUM,
+                        cellMonSerisedNum.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_STOREPOSITION,
+                        cellStorePosition.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_DEPARTMENTOFUSER,
+                        cellDepartmentofUser.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_USER,
+                        cellUser.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_ADDEDNOTE,
+                        cellAddedNote.getContents());
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_CHECKED,
+                        0);
                 db.insert(StaffDataBaseHelper.TABLENAME, null, contentValues);
                 contentValues.clear();
             }
@@ -86,14 +107,16 @@ public class Utility {
         SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
         Cursor cursor =
         db.query(StaffDataBaseHelper.TABLENAME, null, null, null, null, null, null);
+//        db.query(StaffDataBaseHelper.TABLENAME,)
         if (cursor.moveToFirst()) {
             do {
                 String name =
-                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_NAME));
-                String english =
-                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_ENGILISH));
-                String chinese =
-                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_CHINESE));
+                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_COMSERIESNUM));
+//                String english =
+//                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_ENGILISH));
+//                String chinese =
+//                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_CHINESE));
+                Log.d("Utility.class 电脑序列号", name);
             }while (cursor.moveToNext());
         }
         cursor.close();

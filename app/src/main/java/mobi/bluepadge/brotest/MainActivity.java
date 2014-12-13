@@ -1,39 +1,35 @@
 package mobi.bluepadge.brotest;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import mobi.bluepadge.brotest.db.StaffDataBaseHelper;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
-    private StaffDataBaseHelper dataBaseHelper;
-    private Button searchScan;
-    private Button searchEdit;
+//    private StaffDataBaseHelper dataBaseHelper;
+    private ImageButton searchScan;
+    private ImageButton searchEdit;
     private EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Utility.writeXlmToDb(MainActivity.this, "ROM.xls");
-        searchScan = (Button) findViewById(R.id.search_from_scan);
-        searchEdit = (Button) findViewById(R.id.search_from_edit);
+        Utility.writeXlmToDb(MainActivity.this, "Book.xls");
+        searchScan = (ImageButton) findViewById(R.id.search_from_scan);
+        searchEdit = (ImageButton) findViewById(R.id.search_from_edit);
         editText = (EditText) findViewById(R.id.computerId);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -51,27 +47,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         });
         searchEdit.setOnClickListener(this);
         searchScan.setOnClickListener(this);
-        /*
-        dataBaseHelper = new StaffDataBaseHelper(MainActivity.this,
-                StaffDataBaseHelper.DBNAME, null, 1);
-        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
-        Cursor cursor =
-        db.query(StaffDataBaseHelper.TABLENAME, null, null, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String name =
-                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_NAME));
-                String english =
-                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_ENGILISH));
-                String chinese =
-                        cursor.getString(cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_CHINESE));
-                Log.d("MainActivity", name);
-                Log.d("MainActivity", english);
-                Log.d("MainActivity", chinese);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        */
     }
 
 
