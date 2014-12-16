@@ -12,6 +12,8 @@ public class StaffDataBaseHelper extends SQLiteOpenHelper {
 
     public static final String DBNAME = "staffcomputer.db";
     public static final String TABLENAME = "computer";
+    public static final String CHECKED = "1";
+    public static final String UNCHECKED = "0";
     /**
      * 资产名称
      */
@@ -66,7 +68,7 @@ public class StaffDataBaseHelper extends SQLiteOpenHelper {
                     TABLE_COLUMN_DEPARTMENTOFUSER + " text," +
                     TABLE_COLUMN_USER+ " text," +
                     TABLE_COLUMN_ADDEDNOTE+ " text," +
-                    TABLE_COLUMN_CHECKED+ " integer)";
+                    TABLE_COLUMN_CHECKED+ " text)";
 
     public StaffDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

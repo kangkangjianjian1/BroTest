@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="mobi.bluepadge.brotest.ResultActivity">
+
+    <TextView
+        android:id="@+id/userName"
+        android:text="李健健"
+        android:textSize="26sp"
+        android:textColor="@color/material_blue_grey_950"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/department"
+        android:text="部门"
+        android:textSize="14sp"
+        android:layout_toRightOf="@id/userName"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="40dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/material_blue_grey_800"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/sourName"
+        android:text="资产名称"
+        android:textSize="16sp"
+        android:layout_below="@id/userName"
+        android:paddingTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="型号"
+        android:textSize="16sp"
+        android:id="@+id/specifications"
+        android:layout_toRightOf="@id/sourName"
+        android:layout_below="@id/department"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:paddingTop="16dp"
+        android:paddingRight="40dp"
+        android:paddingLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/monSerNum"
+        android:text="显示器序列号"
+        android:textSize="16sp"
+        android:layout_below="@id/sourName"
+        android:paddingTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/position"
+        android:layout_below="@id/monSerNum"
+        android:text="存放地点"
+        android:textSize="16sp"
+        android:paddingTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/date"
+        android:text="入库日期"
+        android:textSize="16sp"
+        android:layout_below="@id/monSerNum"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/position"
+        android:gravity="right"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingRight="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <CheckBox
+        android:id="@+id/checkAsRead"
+        android:checked="true"
+        android:text="标记为已检查"
+        android:layout_below="@id/position"
+        android:layout_alignParentRight="true"
+        android:paddingRight="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
