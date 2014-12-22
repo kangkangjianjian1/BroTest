@@ -36,7 +36,6 @@ public class Utility {
 
     /**
      * 返回数据库是否已经写入
-     *
      * @param context
      * @return
      */

@@ -64,12 +64,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
             case R.id.search_from_scan:
                 IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-                integrator.addExtra("SCAN_WIDTH", 640);
-                integrator.addExtra("SCAN_HEIGHT", 480);
-                integrator.addExtra("SCAN_MODE", "QR_CODE_MODE,PRODUCT_MODE");
+//                integrator.addExtra("SCAN_WIDTH", 640);
+//                integrator.addExtra("SCAN_HEIGHT", 480);
+//                integrator.addExtra("SCAN_MODE", "QR_CODE_MODE,PRODUCT_MODE");
+//                integrator.addExtra("SCAN_MODE", "QR_CODE_MODE,PRODUCT_MODE");
                 //customize the prompt message before scanning
                 integrator.addExtra("PROMPT_MESSAGE", "开始扫描");
-                integrator.initiateScan(IntentIntegrator.PRODUCT_CODE_TYPES);
+//                integrator.initiateScan(IntentIntegrator.PRODUCT_CODE_TYPES);
+                integrator.initiateScan();
                 break;
             case R.id.saveToSdbtn:
                 WriteSd writeSd = new WriteSd(MainActivity.this);
