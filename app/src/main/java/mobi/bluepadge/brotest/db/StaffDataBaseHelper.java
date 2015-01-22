@@ -46,6 +46,11 @@ public class StaffDataBaseHelper extends SQLiteOpenHelper {
      * 现在使用人
      */
     public static final String TABLE_COLUMN_USER = "user";
+
+    /**
+     * 检查结果
+     */
+    public static final String TABLE_COLUMN_RESULT = "result";
     /**
      * 备注
      */
@@ -68,6 +73,7 @@ public class StaffDataBaseHelper extends SQLiteOpenHelper {
                     TABLE_COLUMN_DEPARTMENTOFUSER + " text," +
                     TABLE_COLUMN_USER+ " text," +
                     TABLE_COLUMN_ADDEDNOTE+ " text," +
+                    TABLE_COLUMN_RESULT+ " text," +
                     TABLE_COLUMN_CHECKED+ " text)";
 
     public StaffDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

@@ -34,6 +34,25 @@
             android:minHeight="50dp"
             />
     </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="查询剩余"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <AutoCompleteTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="办公地点"
+            android:id="@+id/autoCompleteTextView"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
     <Button
         android:id="@+id/saveToSdbtn"
         android:text="保存到SD卡"

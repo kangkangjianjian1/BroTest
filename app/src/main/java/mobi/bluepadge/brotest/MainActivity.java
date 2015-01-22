@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,6 +28,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private EditText editText;
     private ProgressDialog progressDialog;
     private Button save;
+
+    private AutoCompleteTextView mWorkPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +42,18 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         searchEdit = (ImageButton) findViewById(R.id.search_from_edit);
         editText = (EditText) findViewById(R.id.computerId);
         save = (Button) findViewById(R.id.saveToSdbtn);
+
+        mWorkPosition = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        String[] array = new String[]{
+                "工程院四楼",
+                "开发一中心二楼",
+                "工程院一楼",
+                "工程院4楼",
+        };
+        ArrayAdapter<String> positionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,array);
+        mWorkPosition.setThreshold(1);
+        mWorkPosition.setAdapter(positionAdapter);
+
         save.setOnClickListener(this);
         searchEdit.setOnClickListener(this);
         searchScan.setOnClickListener(this);

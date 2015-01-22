@@ -149,6 +149,19 @@ public class Utility {
         );
     }
 
+    public static void writeAddedNote(Context context,String comid, String addNote) {
+        StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
+                StaffDataBaseHelper.DBNAME, null, 1);
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(StaffDataBaseHelper.TABLE_COLUMN_RESULT, addNote);
+        db.update(StaffDataBaseHelper.TABLENAME,
+                cv,
+                StaffDataBaseHelper.TABLE_COLUMN_COMSERIESNUM + " = ?",
+                new String[]{comid}
+        );
+    }
+
     public static void unmark(Context context, String comid) {
         StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
                 StaffDataBaseHelper.DBNAME, null, 1);
