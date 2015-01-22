@@ -3,15 +3,21 @@ package mobi.bluepadge.brotest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -31,6 +37,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private AutoCompleteTextView mWorkPosition;
 
+    private ListView mUnchecked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +51,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         editText = (EditText) findViewById(R.id.computerId);
         save = (Button) findViewById(R.id.saveToSdbtn);
 
+        mUnchecked = (ListView) findViewById(R.id.showResultLv);
+
         mWorkPosition = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         String[] array = new String[]{
                 "工程院四楼",
@@ -50,9 +60,33 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 "工程院一楼",
                 "工程院4楼",
         };
-        ArrayAdapter<String> positionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,array);
+        final ArrayAdapter<String> positionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,array);
         mWorkPosition.setThreshold(1);
         mWorkPosition.setAdapter(positionAdapter);
+        //mWorkPosition.setOnClickListener(this);
+        //设置点击事件
+        mWorkPosition.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String obj = (String) parent.getItemAtPosition(position);
+                Cursor cursor = Utility.queryUnchecked(MainActivity.this, obj);
+                String[] from = new String[]{
+                        StaffDataBaseHelper.TABLE_COLUMN_SOURCENAME,
+                        StaffDataBaseHelper.TABLE_COLUMN_COMSERIESNUM,
+                        StaffDataBaseHelper.TABLE_COLUMN_DEPARTMENTOFUSER,
+                        StaffDataBaseHelper.TABLE_COLUMN_USER,
+                };
+                int[] to = new int[]{
+                        R.id.sourceName,
+                        R.id.sourceNum,
+                        R.id.department,
+                        R.id.username_item,
+                };
+                ListAdapter listAdapter= new SimpleCursorAdapter(MainActivity.this, R.layout.list_item,cursor,from, to);
+                mUnchecked.setAdapter(listAdapter);
+                //Toast.makeText(MainActivity.this, obj,Toast.LENGTH_SHORT).show();
+            }
+        });
 
         save.setOnClickListener(this);
         searchEdit.setOnClickListener(this);
@@ -93,6 +127,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             case R.id.saveToSdbtn:
                 WriteSd writeSd = new WriteSd(MainActivity.this);
                 writeSd.execute(StaffDataBaseHelper.CHECKED);
+                break;
+            case R.id.autoCompleteTextView:
+                Toast.makeText(this, "test",Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

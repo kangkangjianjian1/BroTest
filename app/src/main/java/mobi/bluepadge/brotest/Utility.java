@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.session.PlaybackState;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -135,6 +136,22 @@ public class Utility {
                         null, null, null);
         return cursor;
     }
+    public static Cursor queryUnchecked(Context contect,String position){
+        StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(contect,
+                StaffDataBaseHelper.DBNAME,null,1);
+        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
+        if ("".equals(position)) {
+            return null;
+        }
+        Cursor cursor =
+                db.query(StaffDataBaseHelper.TABLENAME,
+                        null,
+                        StaffDataBaseHelper.TABLE_COLUMN_STOREPOSITION + " =? "
+                        +StaffDataBaseHelper.TABLE_COLUMN_CHECKED+" =? ",
+                        new String[]{position,StaffDataBaseHelper.UNCHECKED},
+                        null,null,null);
+        return cursor;
+    }
 
     public static void markAsChecked(Context context, String comSerNum) {
         StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
@@ -204,6 +221,7 @@ public class Utility {
             sheet.addCell(new Label(6, 0, "现使用人部门"));
             sheet.addCell(new Label(7, 0, "现使用人"));
             sheet.addCell(new Label(8, 0, "备注"));
+            sheet.addCell(new Label(9, 0, "检查结果"));
 
             if (cursor.moveToFirst()) {
                 int index = 1;
@@ -227,6 +245,8 @@ public class Utility {
                             cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_USER));
                     String addedNote = cursor.getString(
                             cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_ADDEDNOTE));
+                    String resultNote = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_RESULT));
                     sheet.addCell(new Label(0, index, sourceName));
                     sheet.addCell(new Label(1, index, specifications));
                     sheet.addCell(new Label(2, index, date));
@@ -236,6 +256,7 @@ public class Utility {
                     sheet.addCell(new Label(6, index, department));
                     sheet.addCell(new Label(7, index, userName));
                     sheet.addCell(new Label(8, index, addedNote));
+                    sheet.addCell(new Label(9, index, resultNote));
                     index++;
                 } while (cursor.moveToNext());
             }
