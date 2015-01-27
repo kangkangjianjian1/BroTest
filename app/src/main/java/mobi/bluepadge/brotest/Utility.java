@@ -1,5 +1,6 @@
 package mobi.bluepadge.brotest;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.session.PlaybackState;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -17,6 +19,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import jxl.Cell;
 import jxl.Sheet;
@@ -34,6 +38,7 @@ import mobi.bluepadge.brotest.db.StaffDataBaseHelper;
  */
 public class Utility {
     private static final String writetoDb = "WriteToDb";
+    private static final String POSITIONS = "positions";
 
     /**
      * 返回数据库是否已经写入
@@ -52,6 +57,20 @@ public class Utility {
         editor.commit();
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static void setPositions(Context context, Set set) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putStringSet(POSITIONS, set);
+        editor.commit();
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static Set getPositions(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getStringSet(POSITIONS, null);
+    }
+
     public static void writeXlmToDb(Context context, String fileName) {
 //        if (!isWriteDb(context)) {
 //            Log.d("Utility.class", "数据库已经存在,不需要重新读取文件写数据库");
@@ -59,6 +78,7 @@ public class Utility {
 //        }
         Log.d("Utility.class", "第一次运行,需要创建数据库");
 //        Toast.makeText(context, "数据初始化仅执行一次,请耐心等待", Toast.LENGTH_LONG).show();
+//        Set set = new HashSet();
         AssetManager am = context.getAssets();
         InputStream inputStream = null;
         StaffDataBaseHelper dbHelper =
@@ -66,6 +86,7 @@ public class Utility {
         SQLiteDatabase db =
                 dbHelper.getWritableDatabase();
         //得到可写的数据库,接下来就是写入数据了
+
         try {
             inputStream = am.open(fileName);
             Workbook wb = Workbook.getWorkbook(inputStream);
@@ -74,12 +95,14 @@ public class Utility {
             //从第一行开始跳过标题栏
             ContentValues contentValues = new ContentValues();
             for (int i = 1; i < row; i++) {
+                if (sheet.getRow(i).length > 5) {
                 Cell cellSourceName = sheet.getCell(0, i);//第一列
                 Cell cellSpecification = sheet.getCell(1, i);
                 Cell cellDate = sheet.getCell(2, i);
                 Cell cellComSerisesNum = sheet.getCell(3, i);
                 Cell cellMonSerisedNum = sheet.getCell(4, i);
                 Cell cellStorePosition = sheet.getCell(5, i);
+//                set.add(cellStorePosition.getContents().trim());
                 Cell cellDepartmentofUser = sheet.getCell(6, i);
                 Cell cellUser = sheet.getCell(7, i);
                 Cell cellAddedNote = sheet.getCell(8, i);
@@ -105,6 +128,7 @@ public class Utility {
                         StaffDataBaseHelper.UNCHECKED);
                 db.insert(StaffDataBaseHelper.TABLENAME, null, contentValues);
                 contentValues.clear();
+                }
             }
         } catch (IOException | BiffException e) {
             e.printStackTrace();
@@ -119,6 +143,7 @@ public class Utility {
         }
 //        设置sharedPreference中的读取数据库的值为false
         setWritetoDb(context, false);
+//        setPositions(context, set);
     }
 
     public static Cursor query(Context context, String comId) {
@@ -136,6 +161,15 @@ public class Utility {
                         null, null, null);
         return cursor;
     }
+    public static Cursor queryPosition(Context context) {
+        StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
+                StaffDataBaseHelper.DBNAME, null, 1);
+        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(StaffDataBaseHelper.DBNAME,
+                null,null,null,null,null,null);
+        return cursor;
+    }
     public static Cursor queryUnchecked(Context contect,String position){
         StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(contect,
                 StaffDataBaseHelper.DBNAME,null,1);
@@ -146,7 +180,7 @@ public class Utility {
         Cursor cursor =
                 db.query(StaffDataBaseHelper.TABLENAME,
                         null,
-                        StaffDataBaseHelper.TABLE_COLUMN_STOREPOSITION + " =? "
+                        StaffDataBaseHelper.TABLE_COLUMN_STOREPOSITION + " =? AND "
                         +StaffDataBaseHelper.TABLE_COLUMN_CHECKED+" =? ",
                         new String[]{position,StaffDataBaseHelper.UNCHECKED},
                         null,null,null);

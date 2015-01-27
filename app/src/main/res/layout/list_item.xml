@@ -21,23 +21,21 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="规格型号"
         android:id="@+id/sourceNum"
-        android:layout_alignTop="@+id/sourceName"
+        android:layout_below="@+id/sourceName"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="49dp"
-        android:layout_marginEnd="49dp" />
+        android:layout_marginRight="39dp"
+        android:layout_marginEnd="39dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="使用人部门"
         android:id="@+id/department"
+        android:layout_marginTop="39dp"
         android:layout_below="@+id/sourceName"
         android:layout_alignLeft="@+id/sourceName"
-        android:layout_alignStart="@+id/sourceName"
-        android:layout_marginTop="22dp"
-        android:layout_toLeftOf="@+id/sourceNum"
-        android:layout_toStartOf="@+id/sourceNum" />
+        android:layout_alignStart="@+id/sourceName" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,6 +43,6 @@
         android:text="使用人姓名"
         android:id="@+id/username_item"
         android:layout_alignTop="@+id/department"
-        android:layout_toRightOf="@+id/department"
-        android:layout_toEndOf="@+id/department" />
+        android:layout_alignLeft="@+id/sourceNum"
+        android:layout_alignStart="@+id/sourceNum" />
 </RelativeLayout>
