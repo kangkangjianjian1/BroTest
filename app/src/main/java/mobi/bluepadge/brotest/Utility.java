@@ -12,6 +12,7 @@ import android.media.session.PlaybackState;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class Utility {
     private static final String writetoDb = "WriteToDb";
     private static final String POSITIONS = "positions";
 
+    public static final String POSITIONSET = "PositionSet";
+
     /**
      * 返回数据库是否已经写入
      * @param context
@@ -54,6 +57,15 @@ public class Utility {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(writetoDb, stub);
+        editor.commit();
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static void setSet(Context context, Set<String> set) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putStringSet(POSITIONSET, set);
+
         editor.commit();
     }
 
@@ -78,7 +90,7 @@ public class Utility {
 //        }
         Log.d("Utility.class", "第一次运行,需要创建数据库");
 //        Toast.makeText(context, "数据初始化仅执行一次,请耐心等待", Toast.LENGTH_LONG).show();
-//        Set set = new HashSet();
+        Set<String> set = new HashSet<String>();
         AssetManager am = context.getAssets();
         InputStream inputStream = null;
         StaffDataBaseHelper dbHelper =
@@ -102,7 +114,7 @@ public class Utility {
                 Cell cellComSerisesNum = sheet.getCell(3, i);
                 Cell cellMonSerisedNum = sheet.getCell(4, i);
                 Cell cellStorePosition = sheet.getCell(5, i);
-//                set.add(cellStorePosition.getContents().trim());
+                set.add(cellStorePosition.getContents().trim());
                 Cell cellDepartmentofUser = sheet.getCell(6, i);
                 Cell cellUser = sheet.getCell(7, i);
                 Cell cellAddedNote = sheet.getCell(8, i);
@@ -144,6 +156,7 @@ public class Utility {
 //        设置sharedPreference中的读取数据库的值为false
         setWritetoDb(context, false);
 //        setPositions(context, set);
+        setSet(context, set);
     }
 
     public static Cursor query(Context context, String comId) {
@@ -161,14 +174,21 @@ public class Utility {
                         null, null, null);
         return cursor;
     }
-    public static Cursor queryPosition(Context context) {
+    public static String[] queryPosition(Context context) {
         StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
                 StaffDataBaseHelper.DBNAME, null, 1);
         SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(StaffDataBaseHelper.DBNAME,
+        Set set = new HashSet();
+
+        Cursor cursor = db.query(StaffDataBaseHelper.TABLENAME,
                 null,null,null,null,null,null);
-        return cursor;
+        while (cursor.moveToFirst()) {
+            set.add(cursor.getString(cursor.getColumnIndex(
+                    StaffDataBaseHelper.TABLE_COLUMN_STOREPOSITION)));
+            cursor.moveToNext();
+        }
+        return (String[]) set.toArray();
     }
     public static Cursor queryUnchecked(Context contect,String position){
         StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(contect,
@@ -300,4 +320,7 @@ public class Utility {
             e.printStackTrace();
         }
     }
+
+
+
 }
