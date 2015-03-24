@@ -1,15 +1,18 @@
 package mobi.bluepadge.brotest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import mobi.bluepadge.brotest.db.StaffDataBaseHelper;
 
@@ -32,8 +35,9 @@ public class ResultActivity extends ActionBarActivity{
     private RadioButton radioButtonUser;
     private RadioButton radioButtonmonitor;
 
+    private EditText editAddNote;
     private Button saveMarks;
-    private String addedNoteString;
+    private String addedNoteString = "正常;";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,8 @@ public class ResultActivity extends ActionBarActivity{
 
         saveMarks = (Button) findViewById(R.id.save);
 
+        editAddNote = (EditText) findViewById(R.id.EditNote);
+
 
         initData(ResultActivity.this, comid);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -65,19 +71,19 @@ public class ResultActivity extends ActionBarActivity{
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.ok:
-                        addedNoteString = "正常";
+                        addedNoteString = "正常;";
                         break;
                     case R.id.QRcodeWrong:
-                        addedNoteString = "条形码已损坏";
+                        addedNoteString = "标签错误;";
                         break;
                     case R.id.positonWrong:
-                        addedNoteString = "地理位置出错";
+                        addedNoteString = "位置错误;";
                         break;
                     case R.id.userWrong:
-                        addedNoteString = "使用人出错";
+                        addedNoteString = "旧标签;";
                         break;
                     case R.id.monitorWrong:
-                        addedNoteString = "显示器序列号出错";
+                        addedNoteString = "无标签;";
                         break;
                     default:
                         break;
@@ -92,7 +98,13 @@ public class ResultActivity extends ActionBarActivity{
             } else {
                 Utility.unmark(ResultActivity.this, comid);
             }
+            String newEditNote = editAddNote.getText().toString();
+            if (!newEditNote.equals("")) {
+                addedNoteString += newEditNote;
+            }
             Utility.writeAddedNote(ResultActivity.this, comid, addedNoteString);
+            Toast.makeText(ResultActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(ResultActivity.this, MainActivity.class));
         }
     });
     }
@@ -132,12 +144,15 @@ public class ResultActivity extends ActionBarActivity{
             date.setVisibility(View.INVISIBLE);
             checkBox.setVisibility(View.INVISIBLE);
             radioGroup.setVisibility(View.INVISIBLE);
+            editAddNote.setVisibility(View.INVISIBLE);
+
+            saveMarks.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onBackPressed() {
-        saveMarks.performClick();
+//        saveMarks.performClick();
         super.onBackPressed();
     }
 }

@@ -107,35 +107,46 @@
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/QRcodeWrong"
-            android:text="条形码损坏"
+            android:text="标签错误"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/positonWrong"
-            android:text="地理位置错误"
+            android:text="位置错误"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/userWrong"
-            android:text="使用人错误"
+            android:text="旧标签"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/monitorWrong"
-            android:text="显示器序列号出错"
+            android:text="无标签"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </RadioGroup>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/EditNote"
+        android:hint="输入备注信息"
+        android:layout_below="@+id/noteAdded"
+        />
+
     <Button
         android:id="@+id/save"
-        android:layout_below="@id/noteAdded"
+        android:layout_below="@id/EditNote"
         android:text="保存检查信息"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 </RelativeLayout>
 </ScrollView>
