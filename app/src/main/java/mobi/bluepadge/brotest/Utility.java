@@ -102,7 +102,7 @@ public class Utility {
         try {
             inputStream = am.open(fileName);
             Workbook wb = Workbook.getWorkbook(inputStream);
-            Sheet sheet = wb.getSheet(1);//得到数据表
+            Sheet sheet = wb.getSheet(0);//得到数据表
             int row = sheet.getRows();
             //从第一行开始跳过标题栏
             ContentValues contentValues = new ContentValues();

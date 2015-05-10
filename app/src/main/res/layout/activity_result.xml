@@ -102,27 +102,27 @@
             android:id="@+id/ok"
             android:checked="true"
 
-            android:text="正常"
+            android:text="二部技术中心区域"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/QRcodeWrong"
-            android:text="标签错误"
+            android:text="三部停车场"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/positonWrong"
-            android:text="位置错误"
+            android:text="三部试车场"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/userWrong"
-            android:text="旧标签"
+            android:text="博泰"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/monitorWrong"
-            android:text="无标签"
+            android:text="新技术中心"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

@@ -10,10 +10,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,7 +28,6 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
 
 import mobi.bluepadge.brotest.db.StaffDataBaseHelper;
 
@@ -79,7 +76,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onStart();
         if (Utility.isWriteDb(MainActivity.this)) {
             writeDb wd = new writeDb(MainActivity.this);
-            wd.execute("hello.xls");
+            wd.execute("cars.xls");
         } else {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);

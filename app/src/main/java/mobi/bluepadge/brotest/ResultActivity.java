@@ -71,19 +71,19 @@ public class ResultActivity extends ActionBarActivity{
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.ok:
-                        addedNoteString = "正常;";
+                        addedNoteString = "二部技术中心区域;";
                         break;
                     case R.id.QRcodeWrong:
-                        addedNoteString = "标签错误;";
+                        addedNoteString = "三部停车场;";
                         break;
                     case R.id.positonWrong:
-                        addedNoteString = "位置错误;";
+                        addedNoteString = "三部试车场;";
                         break;
                     case R.id.userWrong:
-                        addedNoteString = "旧标签;";
+                        addedNoteString = "博泰;";
                         break;
                     case R.id.monitorWrong:
-                        addedNoteString = "无标签;";
+                        addedNoteString = "新技术中心;";
                         break;
                     default:
                         break;
