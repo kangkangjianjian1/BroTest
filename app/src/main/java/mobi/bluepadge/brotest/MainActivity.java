@@ -39,7 +39,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private ImageButton searchEdit;
     private EditText editText;
     private ProgressDialog progressDialog;
-    private Button save;
+    private Button saveChecked;
+    private Button saveNew;
 
     private AutoCompleteTextView mWorkPosition;
 
@@ -58,14 +59,16 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         searchScan = (ImageButton) findViewById(R.id.search_from_scan);
         searchEdit = (ImageButton) findViewById(R.id.search_from_edit);
         editText = (EditText) findViewById(R.id.computerId);
-        save = (Button) findViewById(R.id.saveToSdbtn);
+        saveChecked = (Button) findViewById(R.id.saveToSdbtn);
+        saveNew = (Button) findViewById(R.id.saveNewToSdbtn);
 
         mUnchecked = (ListView) findViewById(R.id.showResultLv);
 
         mWorkPosition = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
 
 
-        save.setOnClickListener(this);
+        saveChecked.setOnClickListener(this);
+        saveNew.setOnClickListener(this);
         searchEdit.setOnClickListener(this);
         searchScan.setOnClickListener(this);
     }
@@ -76,7 +79,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onStart();
         if (Utility.isWriteDb(MainActivity.this)) {
             writeDb wd = new writeDb(MainActivity.this);
-            wd.execute("cars.xls");
+            wd.execute("hello.xls");
         } else {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
@@ -150,10 +153,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
             case R.id.saveToSdbtn:
                 WriteSd writeSd = new WriteSd(MainActivity.this);
-                writeSd.execute(StaffDataBaseHelper.CHECKED);
+                writeSd.execute("old");
                 break;
             case R.id.autoCompleteTextView:
                 Toast.makeText(this, "test",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.saveNewToSdbtn:
+                WriteSd writeNewToSd = new WriteSd(MainActivity.this);
+                writeNewToSd.execute("new");
                 break;
             default:
                 break;
@@ -269,7 +276,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         @Override
         protected Void doInBackground(String... params) {
-            Utility.writeSd(context, params[0]);
+            if ("old".equals(params[0])) {
+                Utility.writeSd(context, StaffDataBaseHelper.CHECKED);
+                return null;
+            }
+            if ("new".equals(params[0])) {
+                Utility.writeNewToSd(context);
+                return null;
+            }
             return null;
         }
 
@@ -279,6 +293,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 progressDialog = new ProgressDialog(context);
                 progressDialog.setMessage("正在写到SD...");
                 progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setCancelable(false);
             }
             progressDialog.show();
         }

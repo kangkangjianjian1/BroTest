@@ -39,6 +39,9 @@ public class ResultActivity extends ActionBarActivity{
     private Button saveMarks;
     private String addedNoteString = "正常;";
 
+    private TextView errorMessage;
+    private Button addNew;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +61,10 @@ public class ResultActivity extends ActionBarActivity{
         radioButtonQRcodeWrong = (RadioButton) findViewById(R.id.QRcodeWrong);
         radioButtonPosition = (RadioButton) findViewById(R.id.positonWrong);
         radioButtonUser = (RadioButton) findViewById(R.id.userWrong);
-        radioButtonmonitor = (RadioButton) findViewById(R.id.monitorWrong);
+//        radioButtonmonitor = (RadioButton) findViewById(R.id.monitorWrong);
+
+        errorMessage = (TextView) findViewById(R.id.error_message);
+        addNew = (Button) findViewById(R.id.add_new);
 
         saveMarks = (Button) findViewById(R.id.save);
 
@@ -71,19 +77,19 @@ public class ResultActivity extends ActionBarActivity{
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.ok:
-                        addedNoteString = "二部技术中心区域;";
+                        addedNoteString = "正常;";
                         break;
                     case R.id.QRcodeWrong:
-                        addedNoteString = "三部停车场;";
+                        addedNoteString = "使用人与台账不符;";
                         break;
                     case R.id.positonWrong:
-                        addedNoteString = "三部试车场;";
+                        addedNoteString = "设备存放位置错误;";
                         break;
                     case R.id.userWrong:
-                        addedNoteString = "博泰;";
+                        addedNoteString = "标签损坏;";
                         break;
                     case R.id.monitorWrong:
-                        addedNoteString = "新技术中心;";
+                        addedNoteString = "显示器序列号错误;";
                         break;
                     default:
                         break;
@@ -99,17 +105,18 @@ public class ResultActivity extends ActionBarActivity{
                 Utility.unmark(ResultActivity.this, comid);
             }
             String newEditNote = editAddNote.getText().toString();
-            if (!newEditNote.equals("")) {
-                addedNoteString += newEditNote;
-            }
-            Utility.writeAddedNote(ResultActivity.this, comid, addedNoteString);
+//            if (!newEditNote.equals("")) {
+//                addedNoteString += newEditNote;
+//            }
+            Utility.writeAddedNote(ResultActivity.this, comid,addedNoteString ,newEditNote);
             Toast.makeText(ResultActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(ResultActivity.this, MainActivity.class));
+            ResultActivity.this.finish();
         }
     });
     }
 
-    private void initData(Context context,String comid) {
+    private void initData(Context context, final String comid) {
         Cursor cursor = Utility.query(context, comid);
         if (cursor.moveToFirst()) {
             String userName = cursor.getString(
@@ -135,7 +142,8 @@ public class ResultActivity extends ActionBarActivity{
             ResultActivity.this.date.setText(date);
 
         } else {
-            userName.setText("序列码出错,请重试");
+//            userName.setText("序列码出错,请重试");
+            userName.setVisibility(View.INVISIBLE);
             department.setVisibility(View.INVISIBLE);
             sourceName.setVisibility(View.INVISIBLE);
             specifications.setVisibility(View.INVISIBLE);
@@ -147,6 +155,21 @@ public class ResultActivity extends ActionBarActivity{
             editAddNote.setVisibility(View.INVISIBLE);
 
             saveMarks.setVisibility(View.INVISIBLE);
+
+            errorMessage.setVisibility(View.VISIBLE);
+            addNew.setVisibility(View.VISIBLE);
+
+            addNew.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentAddNew = new Intent(ResultActivity.this, AddNewActivity.class);
+                    intentAddNew.putExtra("addNew", comid);
+                    startActivity(intentAddNew);
+                    ResultActivity.this.finish();
+
+                }
+            });
+
         }
     }
 

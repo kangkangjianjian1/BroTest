@@ -6,11 +6,12 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/art_clear"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTask"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -19,14 +20,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ResultActivity"
             android:label="@string/title_activity_result"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="mobi.bluepadge.brotest.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".AddNewActivity"
+            android:label="@string/title_activity_addnew"
+            android:windowSoftInputMode="stateHidden" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mobi.bluepadge.brotest.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>

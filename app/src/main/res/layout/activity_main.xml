@@ -53,11 +53,26 @@
 
 
     </LinearLayout>
-    <Button
-        android:id="@+id/saveToSdbtn"
-        android:text="保存到SD卡"
+    <LinearLayout
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/saveToSdbtn"
+            android:text="保存检查信息"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+
+        <Button
+            android:id="@+id/saveNewToSdbtn"
+            android:text="保存新添加设备"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+
+    </LinearLayout>
     <ListView
         android:id="@+id/showResultLv"
         android:layout_width="match_parent"

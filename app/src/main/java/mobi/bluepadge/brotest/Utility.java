@@ -20,7 +20,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jxl.Cell;
@@ -102,7 +105,7 @@ public class Utility {
         try {
             inputStream = am.open(fileName);
             Workbook wb = Workbook.getWorkbook(inputStream);
-            Sheet sheet = wb.getSheet(0);//得到数据表
+            Sheet sheet = wb.getSheet(1);//得到数据表
             int row = sheet.getRows();
             //从第一行开始跳过标题栏
             ContentValues contentValues = new ContentValues();
@@ -138,6 +141,9 @@ public class Utility {
                         cellAddedNote.getContents().trim());
                 contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_CHECKED,
                         StaffDataBaseHelper.UNCHECKED);
+                contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_CHECKDATE,
+                        StaffDataBaseHelper.CHECKEDATENULL);
+
                 db.insert(StaffDataBaseHelper.TABLENAME, null, contentValues);
                 contentValues.clear();
                 }
@@ -157,7 +163,48 @@ public class Utility {
         setWritetoDb(context, false);
 //        setPositions(context, set);
         setSet(context, set);
+        db.close();
     }
+
+    public static void addToDb(Context context, List<String> infos) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日  HH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+        String timeStr = formatter.format(curDate);
+
+        StaffDataBaseHelper dbHelper =
+                new StaffDataBaseHelper(context, StaffDataBaseHelper.DBNAME, null, 1);
+        SQLiteDatabase db =
+                dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_COMSERIESNUM,
+                infos.get(0));
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_USER,
+                infos.get(1));
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_DEPARTMENTOFUSER,
+                infos.get(2));
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_SOURCENAME,
+                infos.get(3));
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_SPECIFICATION,
+                infos.get(4));
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_MONSERIESNUM,
+                infos.get(5));
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_STOREPOSITION,
+                infos.get(6));
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_DATE,
+                infos.get(7));
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_CHECKED,
+                StaffDataBaseHelper.CHECKED);
+        contentValues.put(StaffDataBaseHelper.TABLE_COLUMN_CHECKDATE,
+                timeStr);
+
+        db.insert(StaffDataBaseHelper.ADDEDTABLENAME, null, contentValues);
+        contentValues.clear();
+        db.close();
+
+    }
+
 
     public static Cursor query(Context context, String comId) {
         StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
@@ -208,11 +255,17 @@ public class Utility {
     }
 
     public static void markAsChecked(Context context, String comSerNum) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日  HH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+        String timeStr = formatter.format(curDate);
+
         StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
                 StaffDataBaseHelper.DBNAME, null, 1);
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(StaffDataBaseHelper.TABLE_COLUMN_CHECKED, StaffDataBaseHelper.CHECKED);
+        cv.put(StaffDataBaseHelper.TABLE_COLUMN_CHECKDATE, timeStr);
         db.update(StaffDataBaseHelper.TABLENAME,
                 cv,
                 StaffDataBaseHelper.TABLE_COLUMN_COMSERIESNUM + " = ?",
@@ -220,12 +273,13 @@ public class Utility {
         );
     }
 
-    public static void writeAddedNote(Context context,String comid, String addNote) {
+    public static void writeAddedNote(Context context, String comid, String result, String addNote) {
         StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
                 StaffDataBaseHelper.DBNAME, null, 1);
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(StaffDataBaseHelper.TABLE_COLUMN_RESULT, addNote);
+        cv.put(StaffDataBaseHelper.TABLE_COLUMN_RESULT, result);
+        cv.put(StaffDataBaseHelper.TABLE_COLUMN_ADDEDNOTE, addNote);
         db.update(StaffDataBaseHelper.TABLENAME,
                 cv,
                 StaffDataBaseHelper.TABLE_COLUMN_COMSERIESNUM + " = ?",
@@ -276,6 +330,7 @@ public class Utility {
             sheet.addCell(new Label(7, 0, "现使用人"));
             sheet.addCell(new Label(8, 0, "备注"));
             sheet.addCell(new Label(9, 0, "检查结果"));
+            sheet.addCell(new Label(10, 0, "检查时间"));
 
             if (cursor.moveToFirst()) {
                 int index = 1;
@@ -301,6 +356,8 @@ public class Utility {
                             cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_ADDEDNOTE));
                     String resultNote = cursor.getString(
                             cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_RESULT));
+                    String checkDate = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_CHECKDATE));
                     sheet.addCell(new Label(0, index, sourceName));
                     sheet.addCell(new Label(1, index, specifications));
                     sheet.addCell(new Label(2, index, date));
@@ -311,6 +368,7 @@ public class Utility {
                     sheet.addCell(new Label(7, index, userName));
                     sheet.addCell(new Label(8, index, addedNote));
                     sheet.addCell(new Label(9, index, resultNote));
+                    sheet.addCell(new Label(10, index, checkDate));
                     index++;
                 } while (cursor.moveToNext());
             }
@@ -322,5 +380,84 @@ public class Utility {
     }
 
 
+    public static void writeNewToSd(Context context) {
 
+        StaffDataBaseHelper dataBaseHelper = new StaffDataBaseHelper(context,
+                StaffDataBaseHelper.DBNAME, null, 1);
+        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
+        Cursor cursor =
+                db.query(StaffDataBaseHelper.ADDEDTABLENAME,
+                        null,
+                        null,
+                        null,
+                        null, null, null
+                );
+        String dir = Environment.getExternalStorageDirectory() + "/CheckedExcel";
+        File a = new File(dir);
+        if (!a.exists()) {
+            a.mkdir();
+        }
+        File file = new File(a, "added.xls");
+        try {
+            WritableWorkbook writableWorkbook = Workbook.createWorkbook(file);
+            WritableSheet sheet = writableWorkbook.createSheet("已检查", 0);
+            sheet.addCell(new Label(0, 0, "资产名称"));
+            sheet.addCell(new Label(1, 0, "规格型号"));
+            sheet.addCell(new Label(2, 0, "入账日期"));
+            sheet.addCell(new Label(3, 0, "主机序列号"));
+            sheet.addCell(new Label(4, 0, "显示器序列号"));
+            sheet.addCell(new Label(5, 0, "存放地点"));
+            sheet.addCell(new Label(6, 0, "现使用人部门"));
+            sheet.addCell(new Label(7, 0, "现使用人"));
+            sheet.addCell(new Label(8, 0, "备注"));
+            sheet.addCell(new Label(9, 0, "检查结果"));
+            sheet.addCell(new Label(10, 0, "检查时间"));
+
+            if (cursor.moveToFirst()) {
+                int index = 1;
+                do {
+                    String sourceName = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_SOURCENAME));
+                    String specifications = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_SPECIFICATION));
+                    String date = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_DATE));
+                    String comSerId = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_COMSERIESNUM));
+                    String monSerId = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_MONSERIESNUM));
+                    String position = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_STOREPOSITION));
+                    String department = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_DEPARTMENTOFUSER));
+                    String userName = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_USER));
+                    String addedNote = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_ADDEDNOTE));
+                    String resultNote = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_RESULT));
+                    String checkDate = cursor.getString(
+                            cursor.getColumnIndex(StaffDataBaseHelper.TABLE_COLUMN_CHECKDATE));
+
+                    sheet.addCell(new Label(0, index, sourceName));
+                    sheet.addCell(new Label(1, index, specifications));
+                    sheet.addCell(new Label(2, index, date));
+                    sheet.addCell(new Label(3, index, comSerId));
+                    sheet.addCell(new Label(4, index, monSerId));
+                    sheet.addCell(new Label(5, index, position));
+                    sheet.addCell(new Label(6, index, department));
+                    sheet.addCell(new Label(7, index, userName));
+                    sheet.addCell(new Label(8, index, addedNote));
+                    sheet.addCell(new Label(9, index, resultNote));
+                    sheet.addCell(new Label(10, index, checkDate));
+                    index++;
+                } while (cursor.moveToNext());
+            }
+            writableWorkbook.write();
+            writableWorkbook.close();
+        } catch (IOException | WriteException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

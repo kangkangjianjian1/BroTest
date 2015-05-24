@@ -3,9 +3,13 @@
     android:layout_height="match_parent"
     >
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="120dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -13,7 +17,7 @@
 
     <TextView
         android:id="@+id/userName"
-        android:text="李健健"
+        android:text="李小康"
         android:textSize="26sp"
         android:textColor="@color/material_blue_grey_950"
         android:padding="10dp"
@@ -102,29 +106,30 @@
             android:id="@+id/ok"
             android:checked="true"
 
-            android:text="二部技术中心区域"
+            android:text="正常"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/QRcodeWrong"
-            android:text="三部停车场"
+            android:text="使用人与台账不符"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/positonWrong"
-            android:text="三部试车场"
+            android:text="设备存放位置错误"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/userWrong"
-            android:text="博泰"
+            android:text="标签损坏"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/monitorWrong"
-            android:text="新技术中心"
+            android:text="显示器序列号错误"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
 
     </RadioGroup>
 
@@ -133,6 +138,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
         android:id="@+id/EditNote"
         android:hint="输入备注信息"
@@ -147,6 +154,24 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/error_message"
+        android:text="没有设备信息，点击添加"
+        android:textSize="26sp"
+        android:textColor="@color/material_blue_grey_950"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:visibility="invisible"
+        android:id="@+id/add_new"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="添加设备"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>
 </ScrollView>
